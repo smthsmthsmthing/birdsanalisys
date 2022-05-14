@@ -57,12 +57,6 @@ with st.echo(code_location='below'):
     """
 
     grouped = []
-    #max=pd.DataFrame(index=(np.delete(birds.columns, birds.columns=="type")), columns=birds['type'].unique())
-    #min=pd.DataFrame(index=(np.delete(birds.columns, birds.columns=="type")), columns=birds['type'].unique())
-        #for column in grouped.columns:
-         #   if column != 'type':
-          #      max[type][column]=grouped[column].max()
-        #st.write(max)
     Y= st.selectbox("Choose what feature you want to see", birds.columns)
     for type in birds['type'].unique():
         grouped.append(list(birds.loc[birds['type']==type][Y].dropna()))
@@ -73,10 +67,6 @@ with st.echo(code_location='below'):
     plt.ylabel(Y)
     ax.set_title(Y+' of different types of birds')
     st.pyplot(fig)
-    #fig, ax = plt.subplots(figsize=(18, 14))
-    #ax.set_xticklabels(birds["type"].unique(), fontweight='bold', fontsize=15, rotation=90)
-    #plt.ylabel(Y, fontweight='bold', fontsize=20, fontfamily='serif')
-    #st.pyplot(fig)
     """
     Not only that, but different types of birds have different ratios and different dependencies of ratios
     
@@ -89,7 +79,6 @@ with st.echo(code_location='below'):
     X_axis= st.selectbox("Сhoose what you want to compare to", birds.columns)
 
     birds_selection = birds[birds['type'].isin(type_of_bird)]
-    #birds_selection = birds[lambda x: x['type'] == type_of_bird]
 
     chart = (
         alt.Chart(birds_selection).mark_circle().encode(x=X_axis, y=Y_axis, tooltip=[Y_axis, X_axis], color='type')
