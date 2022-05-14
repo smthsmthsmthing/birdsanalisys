@@ -22,35 +22,38 @@ with st.echo(code_location='below'):
     """
     ## How many and what kinds of birds do we analize anyway?
     """
-
-    types=birds.groupby(birds['type']).size()
-    types=types.reset_index()
-    types.columns=['type', 'number']
-    types['percentage']=[str('%.1f' %((i/sum(types['number']))*100))+'%' for i in types['number']]
-    st.dataframe(types.iloc[:,[0,1]])
+    types = birds.groupby(birds['type']).size()
+    types = types.reset_index()
+    types.columns = ['type', 'number']
+    types['percentage'] = [str('%.1f' % ((i / sum(types['number'])) * 100)) + '%' for i in types['number']]
+    st.dataframe(types.iloc[:, [0, 1]])
+    selector = st.selector('choose library for plotting', ('Altair', 'Matplotlib'))
+    if selector == 'Altair':
+        chart = alt.Chart(types).encode(
+            theta=alt.Theta(field="number", type="quantitative", stack=True),
+            color=alt.Color(field="type", type="nominal", legend=None), tooltip=['number']
+        ).properties(width=600, height=600, title={'text': 'Basic information about the dataset',
+                                                   'subtitle': 'total number of birds is ' + str(types.number.sum())})
+        pie = chart.mark_arc(outerRadius=180)
+        text = pie.mark_text(radius=250, size=15, fill='black').encode(text="type:N")
+        percentage = pie.mark_text(radius=100, size=15, fill='black').encode(text='percentage')
+        st.altair_chart(pie + text + percentage)
+    else:
+        fig, ax = plt.subplots()
+        ax.text(-0.3, 1.05, 'total count of birds: ' + str(sum(types['number'])), color='black', size=6)
+        ax.set_title('Basic information about the dataset')
+        ax.pie(types['number'], labels=types['type'], autopct='%1.1f%%')
+        ax.axis('equal')
+        st.pyplot(fig)
 
     """
     This chart is here because I spent too much time on it. There is a nicer more interactive chart under it, though
     """
-    fig, ax =plt.subplots()
-    ax.text(-0.3,1.05,'total count of birds: '+str(sum(types['number'])), color='black', size=6)
-    ax.set_title('Basic information about the dataset')
-    ax.pie(types['number'], labels=types['type'], autopct='%1.1f%%')
-    ax.axis('equal')
-    st.pyplot(fig)
 
     """
     Hover your cursor for better experience
     """
 
-    chart=alt.Chart(types).encode(
-        theta=alt.Theta(field="number", type="quantitative", stack=True),
-        color=alt.Color(field="type", type="nominal", legend = None), tooltip=['number']
-    ).properties(width=600, height=600, title={'text':'Basic information about the dataset', 'subtitle':'total number of birds is '+str(types.number.sum())})
-    pie = chart.mark_arc(outerRadius=180)
-    text = pie.mark_text(radius=250, size=15, fill='black').encode(text="type:N")
-    percentage=pie.mark_text(radius=100, size=15, fill='black').encode(text='percentage')
-    st.altair_chart(pie+text+percentage)
 
     """
     ## The type that a bird belongs to actually affects its sceleton structure. Here you can see it for yourself
