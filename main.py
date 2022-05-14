@@ -27,7 +27,7 @@ with st.echo(code_location='below'):
     types.columns = ['type', 'number']
     types['percentage'] = [str('%.1f' % ((i / sum(types['number'])) * 100)) + '%' for i in types['number']]
     st.dataframe(types.iloc[:, [0, 1]])
-    selector = st.selectbox('choose library for plotting', ('Altair', 'Matplotlib'))
+    selector = st.selectbox('Choose library for plotting. I recommend selecting altair. Hover your cursor for better experience. Matplotlib chart is here because I spent too much time on it', ('Altair', 'Matplotlib'))
     if selector == 'Altair':
         chart = alt.Chart(types).encode(
             theta=alt.Theta(field="number", type="quantitative", stack=True),
@@ -45,15 +45,6 @@ with st.echo(code_location='below'):
         ax.pie(types['number'], labels=types['type'], autopct='%1.1f%%')
         ax.axis('equal')
         st.pyplot(fig)
-
-    """
-    This chart is here because I spent too much time on it. There is a nicer more interactive chart under it, though
-    """
-
-    """
-    Hover your cursor for better experience
-    """
-
 
     """
     ## The type that a bird belongs to actually affects its sceleton structure. Here you can see it for yourself
