@@ -27,7 +27,7 @@ with st.echo(code_location='below'):
     types.columns = ['type', 'number']
     types['percentage'] = [str('%.1f' % ((i / sum(types['number'])) * 100)) + '%' for i in types['number']]
     st.dataframe(types.iloc[:, [0, 1]])
-    selector = st.selector('choose library for plotting', ('Altair', 'Matplotlib'))
+    selector = st.selectbox('choose library for plotting', ('Altair', 'Matplotlib'))
     if selector == 'Altair':
         chart = alt.Chart(types).encode(
             theta=alt.Theta(field="number", type="quantitative", stack=True),
